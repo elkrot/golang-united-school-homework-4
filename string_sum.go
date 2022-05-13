@@ -26,39 +26,43 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-
 	if strings.TrimSpace(input) == "" {
 		return "", fmt.Errorf("Input parameter error: %w", errorEmptyInput)
 	}
 
-	result := strings.Split(input, "")
 	sum := 0
 	sign := "+"
 	operand_count := 0
+	strv := ""
+	for i, v := range input {
+		if !(string(v) == "+" || string(v) == "-" || string(v) == " " || i == len(input)-1) {
+			strv += string(v)
+		} else {
 
-	for _, v := range result {
-		if !(v == " ") {
-			if !(v == "+" || v == "-") {
-				n, err := strconv.Atoi(v)
+			if strv != "" || i == len(input)-1 {
+				if i == len(input)-1 {
+					strv += string(v)
+				}
+				n, err := strconv.Atoi(strings.TrimSpace(strv))
+
 				if err == nil {
 					if sign == "-" {
 						sum -= n
 					} else {
 						sum += n
 					}
+					strv = ""
 					operand_count++
 				} else {
-
-					return "", fmt.Errorf("Conversion process failed with error : %w", err)
-
-				}
-			} else {
-				if v == "-" {
-					sign = "-"
-				} else {
-					sign = "+"
+					return "", fmt.Errorf("conversion process failed with error : %w", err)
 				}
 			}
+			if string(v) == "-" {
+				sign = "-"
+			} else {
+				sign = "+"
+			}
+
 		}
 	}
 
