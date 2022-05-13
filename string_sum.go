@@ -34,6 +34,7 @@ func StringSum(input string) (output string, err error) {
 	sign := "+"
 	operand_count := 0
 	strv := ""
+	fire := false
 	for i, v := range input {
 		if !(string(v) == "+" || string(v) == "-" || string(v) == " " || i == len(input)-1) {
 			strv += string(v)
@@ -52,17 +53,21 @@ func StringSum(input string) (output string, err error) {
 						sum += n
 					}
 					strv = ""
+					fire = true
 					operand_count++
 				} else {
 					return "", fmt.Errorf("conversion process failed with error : %w", err)
 				}
+
 			}
 			if string(v) == "-" {
 				sign = "-"
+				fire = false
 			} else {
-				sign = "+"
+				if (fire == true && string(v) == " ") || string(v) == "+" {
+					sign = "+"
+				}
 			}
-
 		}
 	}
 
